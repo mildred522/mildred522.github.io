@@ -1,8 +1,29 @@
 import Image from "next/image";
+import React from 'react';
 
 export default function Home() {
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+      {/* 背景视频 */}
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          zIndex: -1,
+        }}
+      >
+        <source src="/backvideo.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
         <Image
           className="dark:invert"
@@ -41,7 +62,7 @@ export default function Home() {
           </a>
           <a
             className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://ycna8o9c6bcq.feishu.cn/wiki/VKP3w7uTJij2vfk16MBcAeLJnpc?from=from_copylink" // 替换为你的飞书文档链接
+            href="https://ycna8o9c6bcq.feishu.cn/wiki/VKP3w7uTJij2vfk16MBcAeLJnpc?from=from_copylink"
             target="_blank"
             rel="noopener noreferrer"
           >
