@@ -1,5 +1,6 @@
 import Image from "next/image";
 import React from 'react';
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -70,14 +71,16 @@ export default function Home() {
             />
             查看飞书文档
           </a>
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-background text-foreground gap-2 hover:bg-[#ffffff] dark:hover:bg-[#ffffff] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+           <div>
+      {/* 使用 Link 组件创建一个到 About 页面的链接 */}
+      <Link 
+      className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-background text-foreground gap-2 hover:bg-[#ffffff] dark:hover:bg-[#ffffff] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
+      href="/about"
+      target="_blank"
+      rel="noopener noreferrer">
+        浏览博客文章
+      </Link>
+    </div>
         </div>
       </main>
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
