@@ -71,6 +71,14 @@ export default function Home() {
             />
             查看飞书文档
           </a>
+          <a
+            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-background text-foreground gap-2 hover:bg-[#ffffff] dark:hover:bg-[#ffffff] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
+            href="https://effneu-trinity.github.io/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            浏览博客文章（导向Trinity）
+          </a>
            <div>
       {/* 使用 Link 组件创建一个到 About 页面的链接 */}
       <Link 
