@@ -5,6 +5,9 @@ on:
     branches:
       - main # 将 main 替换为你使用的分支名称
 
+permissions:
+  contents: write
+  
 jobs:
   deploy:
     runs-on: ubuntu-latest
