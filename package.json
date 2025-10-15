@@ -1,26 +1,28 @@
 {
-  "name": "myblog",
-  "version": "0.1.0",
+  "name": "hexo-site",
+  "version": "0.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+    "build": "hexo generate",
+    "clean": "hexo clean",
+    "deploy": "hexo deploy",
+    "server": "hexo server"
+  },
+  "hexo": {
+    "version": "8.0.0"
   },
   "dependencies": {
-    "next": "15.2.1",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
-  },
-  "devDependencies": {
-    "@actions/core": "^1.11.1",
-    "@actions/github": "^6.0.0",
-    "@eslint/eslintrc": "^3",
-    "@tailwindcss/postcss": "^4",
-    "actions-github-pages": "github:peaceiris/actions-gh-pages",
-    "eslint": "^9",
-    "eslint-config-next": "15.2.1",
-    "tailwindcss": "^4"
+    "hexo": "^8.0.0",
+    "hexo-deployer-git": "^4.0.0",
+    "hexo-generator-archive": "^2.0.0",
+    "hexo-generator-category": "^2.0.0",
+    "hexo-generator-index": "^4.0.0",
+    "hexo-generator-tag": "^2.0.0",
+    "hexo-renderer-ejs": "^2.0.0",
+    "hexo-renderer-marked": "^7.0.0",
+    "hexo-renderer-pug": "^3.0.0",
+    "hexo-renderer-stylus": "^3.0.1",
+    "hexo-server": "^3.0.0",
+    "hexo-theme-landscape": "^1.0.0"
   }
 }
