@@ -288,10 +288,10 @@ aside:
       enable: true
       icon: fab fa-github
       text: Follow Me
-      link: https://github.com/xxxxxx
+      link: https://github.com/mildred522
   card_announcement:
     enable: true
-    content: This is my Blog
+    content: 欢迎来到我的博客！我是一名来自东北某神秘985的计算机科学与技术专业学生，技术栈为CPP+GO后端开发。博客绝赞开发中！
   card_recent_post:
     enable: true
     # If set 0 will show all
@@ -361,9 +361,9 @@ rightside_bottom:
 
 # Conversion between Traditional and Simplified Chinese
 translate:
-  enable: false
+  enable: true
   # The text of a button
-  default: 繁
+  default: '簡'
   # the language of website (1 - Traditional Chinese/ 2 - Simplified Chinese）
   defaultEncoding: 2
   # Time delay
