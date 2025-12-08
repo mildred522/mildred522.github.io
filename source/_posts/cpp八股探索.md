@@ -288,3 +288,144 @@ public:
 
 这里将dummy哨兵节点初始化为一个闭环，每次push_front加入元素的时候都会在环上添加一个节点，从而使头节点和尾节点始终能被访问，实现双向链表。
 
+## 2.跳表(skiplist)
+跳表常见于与红黑树类似但对并发要求较高的场景，能够提供Ologn的增删改查时间复杂度（但跳表在最劣情况下会退化到On）（空间复杂度为On）。
+跳表的结构为一个head节点，head节点持有有MAX_LEVEL条链表。
+
+<div style="text-align: center;">
+    <img src="/img/skiplist.png" alt="跳表示意图" style="width: auto; height: auto;">
+</div>
+
+如图所示为跳表的基本结构，```head->forward[i]```表示在第i层的第一个节点， ```head->forward[i]->forward[i]```则表示在第i层的第二个节点，以此类推。
+需要注意的是，尽管在示意图中一个节点可能在不同的level中同时出现，但他们实际仅占用一份内存，图示的含义为，从不同层的某个前驱节点都可以访问到该节点。
+
+单个节点的结构为：
+```cpp
+struct ListNode {
+    int value;
+    // forward[i] 表示该节点在第 i 层的下一个节点
+    // 数组大小在 new 节点时根据随机出的 level 确定
+    vector<ListNode*> forward; 
+    
+    ListNode(int v, int level) : value(v), forward(level, nullptr) {}
+};
+```
+
+在插入一个节点时，先利用一个随机函数确定层高，然后从最高层往下遍历。
+我们可以在每一层利用之前的层数中获取的信息（从高层到底层），表现为在不同层数中通用的语句```cur = cur->forward[i]```。因此插入所进行的总迭代次数为常数，而总层数为logn，总体复杂度为Ologn。其余操作原理类似。
+
+以下为一个基本的跳表实现：
+```cpp
+static const int MAX_LEVEL = 24;
+// 虽然是单机的，但我们要实现默认的线程安全
+
+class Skiplist {
+    struct ListNode {
+        int value;
+        vector<ListNode*> forward;
+
+        ListNode(int v, int level) : value(v), forward(level, nullptr) {};
+    };
+
+public:
+    Skiplist() { srand(time(nullptr)); }
+
+    bool search(int target) {
+        ListNode* cur = head;
+
+        for (int i = cur_level - 1; i >= 0; i--) {
+
+            while (cur->forward[i] != nullptr &&
+                   cur->forward[i]->value < target) {
+                cur = cur->forward[i];
+            }
+        }
+        if (cur->forward[0] != nullptr && cur->forward[0]->value == target) {
+            return true;
+        }
+        return false;
+    }
+
+    void add(int num) {
+        int level = randlevel(); // 插入节点的层高
+        ListNode* update[MAX_LEVEL];
+
+        if (level > cur_level) {
+            cur_level = level;
+        }
+
+        ListNode* tar = new ListNode(num, level);
+
+        ListNode* cur = head;
+        for (int i = cur_level - 1; i >= 0; i--) {
+
+            while (cur->forward[i] != nullptr && cur->forward[i]->value < num) {
+                cur = cur->forward[i];
+            }
+
+            update[i] = cur; // 在每层中找到该元素的前驱节点
+        }
+
+        // 实际插入节点
+        for (int i = 0; i < level; i++) {
+            tar->forward[i] = update[i]->forward[i];
+            update[i]->forward[i] = tar;
+        }
+    }
+
+    bool erase(int num) {
+        ListNode* update[MAX_LEVEL];
+        ListNode* cur = head;
+
+        for (int i = cur_level - 1; i >= 0; i--) {
+
+            while (cur->forward[i] != nullptr && cur->forward[i]->value < num) {
+                cur = cur->forward[i];
+            }
+           
+            update[i] = cur; // 在每层中找到该元素的前驱节点
+            
+        }
+
+        ListNode* target = cur->forward[0];
+
+        if (target == nullptr || target->value != num) {
+            return false;
+        }
+        
+        for (int i = 0; i < cur_level; i++) {
+            if (update[i]->forward[i] != target) {
+                break;
+            }
+
+            update[i]->forward[i] = target->forward[i];
+        }
+
+        delete target;
+
+        while (cur_level > 0 && head->forward[cur_level - 1] == nullptr) {
+            cur_level--;
+        }
+
+        return true;
+    }
+
+private:
+    ListNode* head = new ListNode(-1, MAX_LEVEL);
+    int cur_level;
+
+    int randlevel() {
+        static const float P = 0.25;
+
+        int level = 1;
+
+        // rand出来的随机数/RAND_MAX
+        // 为0到1之间的float类型，只要该随机数小于P，则认为事件发生
+        while (((float)rand() / RAND_MAX) < P && level < MAX_LEVEL) {
+            level++;
+        }
+
+        return level;
+    }
+};
+```
