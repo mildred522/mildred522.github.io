@@ -1,38 +1,37 @@
-# 保存在 .github/workflows/pages.yml
-
-name: Pages
+name: Deploy Hexo to Pages
 
 on:
   push:
     branches:
-      - main # 确保这是你的源文件分支
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          submodules: recursive
 
-      - name: Use Node.js 22 # 确保这与你本地的 node -v 版本主版本号一致
+      - name: Use Node.js 20
         uses: actions/setup-node@v4
         with:
-          node-version: "22.14.0"
-          
-      - name: Cache NPM dependencies
-        uses: actions/cache@v4
-        with:
-          path: node_modules
-          key: ${{ runner.OS }}-npm-cache-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.OS }}-npm-cache-
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: "package-lock.json"
 
-      - name: Install Dependencies
-        run: npm install
+      - name: Install dependencies
+        run: npm ci
 
-      - name: Generate files # <-- 这里是关键修改！
+      - name: Build
         run: npx hexo generate
 
       - name: Upload Pages artifact
@@ -42,13 +41,10 @@ jobs:
 
   deploy:
     needs: build
-    permissions:
-      pages: write
-      id-token: write
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
